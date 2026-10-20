@@ -1,0 +1,21 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Connexion — Pawly{% endblock %}
+
+{% block body %}
+    <section class="form-card account-page">
+        <h1>Connexion</h1>
+        {% if error %}
+            <p class="form-error" role="alert">{{ error.messageKey|trans(error.messageData, 'security') }}</p>
+        {% endif %}
+        <form method="post" action="{{ path('app_login') }}" class="animal-form">
+            <div>
+                <div><label for="login-email">Adresse e-mail</label><input id="login-email" type="email" name="_username" value="{{ last_username }}" autocomplete="username" required></div>
+                <div><label for="login-password">Mot de passe</label><input id="login-password" type="password" name="_password" autocomplete="current-password" required></div>
+            </div>
+            <input type="hidden" name="_csrf_token" value="{{ csrf_token('authenticate') }}">
+            <button type="submit" class="button">Se connecter</button>
+        </form>
+        <p>Pas encore de compte ? <a href="{{ path('app_register') }}">S’inscrire</a></p>
+    </section>
+{% endblock %}

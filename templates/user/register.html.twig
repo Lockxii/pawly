@@ -1,0 +1,16 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Inscription — Pawly{% endblock %}
+
+{% block body %}
+    <section class="form-card account-page">
+        <h1>Créer un compte</h1>
+        {{ form_start(form, {attr: {class: 'animal-form'}}) }}
+            {{ form_errors(form) }}
+            {{ form_widget(form) }}
+            <p class="form-help">Le mot de passe doit contenir au moins 8 caractères.</p>
+            <button type="submit" class="button">Créer mon compte</button>
+        {{ form_end(form) }}
+        <p>Déjà inscrit ? <a href="{{ path('app_login') }}">Se connecter</a></p>
+    </section>
+{% endblock %}
