@@ -28,6 +28,7 @@
                     <a href="{{ path('home') }}#animals">Nos animaux</a>
                     {% if is_granted('ROLE_EMPLOYEE') %}
                         <a href="{{ path('all') }}">Gestion des animaux</a>
+                        <a href="{{ path('adoption_list') }}">Demandes d’adoption</a>
                     {% endif %}
                     {% if app.user %}
                         <form method="post" action="{{ path('logout') }}">

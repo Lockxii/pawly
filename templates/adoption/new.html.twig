@@ -1,0 +1,20 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Adopter {{ dog.nom }} — Pawly{% endblock %}
+
+{% block body %}
+    <a class="back-link" href="{{ path('dog_show', {id: dog.id}) }}">← Retour à la fiche</a>
+    <section class="form-card">
+        <h1>Demande d’adoption pour {{ dog.nom }}</h1>
+        {% if dog.status == 'Disponible' %}
+            <p>Présentez-vous au refuge. L’équipe étudiera votre demande et pourra vous contacter par e-mail.</p>
+            {{ form_start(form, {attr: {class: 'animal-form'}}) }}
+                {{ form_errors(form) }}
+                {{ form_widget(form) }}
+                <button type="submit" class="button">Envoyer ma demande</button>
+            {{ form_end(form) }}
+        {% else %}
+            <p>Cet animal n’est plus disponible à l’adoption.</p>
+        {% endif %}
+    </section>
+{% endblock %}
