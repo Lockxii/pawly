@@ -1,0 +1,13 @@
+{% if form is defined and form is not null %}
+    {{ form_start(form, {attr: {class: 'animal-form'}}) }}
+        {{ form_errors(form) }}
+        {{ form_widget(form) }}
+        <p class="form-help">La photographie est facultative. Les champs marqués d'un astérisque sont obligatoires.</p>
+        <div class="form-actions">
+            <button class="button" type="submit">{{ button_label|default('Enregistrer') }}</button>
+            <a href="{{ path('home') }}#animals">Annuler</a>
+        </div>
+    {{ form_end(form) }}
+{% else %}
+    <p class="empty-state">Le formulaire n'est pas disponible pour le moment.</p>
+{% endif %}

@@ -2,15 +2,21 @@
 
 namespace App\Controller;
 
-use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use App\Repository\DogsRepository;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpKernel\Attribute\AsController;
 use Symfony\Component\Routing\Attribute\Route;
+use Twig\Environment;
 
-class HomeController extends AbstractController
+#[AsController]
+#[Route(path: '/', name: 'home', methods:['GET'])]
+class HomeController
 {
-    #[Route('/', name: 'home', methods: ['GET'])]
-    public function __invoke(): Response
-    {
-        return $this->render('home.html.twig');
+    public function __invoke(Environment $twig, DogsRepository $dogsRepository) : Response {
+
+        return new Response($twig->render('home.html.twig',[
+            'dogs' => $dogsRepository->findDogDisponible(),
+
+        ]), Response::HTTP_OK);
     }
 }

@@ -1,0 +1,38 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}{{ dog is defined and dog is not null ? dog.nom ~ ' — Pawly' : 'Fiche animal — Pawly' }}{% endblock %}
+
+{% block body %}
+    <a class="back-link" href="{{ path('home') }}#animals">← Retour aux animaux</a>
+
+    {% if dog is defined and dog is not null %}
+        <article class="animal-detail">
+            <div>
+                {% if dog.coverImage %}
+                    <img class="animal-photo detail-photo" src="{{ asset('uploads/' ~ dog.coverImage|url_encode) }}" alt="Photo de {{ dog.nom }}" width="640" height="480">
+                {% else %}
+                    <div class="photo-placeholder detail-photo">Photo à venir</div>
+                {% endif %}
+            </div>
+            <div class="detail-content">
+                {% include 'dogs/_status.html.twig' with {status: dog.status} only %}
+                <h1>{{ dog.nom }}</h1>
+                <dl class="animal-facts">
+                    <div><dt>Espèce</dt><dd>{{ dog.espece }}</dd></div>
+                    <div><dt>Race</dt><dd>{{ dog.race }}</dd></div>
+                    <div><dt>Âge</dt><dd>{{ dog.age }} {{ dog.age > 1 ? 'ans' : 'an' }}</dd></div>
+                </dl>
+                <h2>Son histoire</h2>
+                <p class="animal-description">{{ dog.description|nl2br }}</p>
+                {% if is_granted('ROLE_EMPLOYEE') %}
+                    <a class="button" href="{{ path('app_dog_modify', {id: dog.id}) }}">Modifier la fiche</a>
+                {% endif %}
+            </div>
+        </article>
+    {% else %}
+        <section class="empty-state">
+            <h1>Fiche indisponible</h1>
+            <p>Cette fiche n'est pas disponible pour le moment.</p>
+        </section>
+    {% endif %}
+{% endblock %}

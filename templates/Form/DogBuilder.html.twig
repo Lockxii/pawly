@@ -1,0 +1,17 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}{{ dog.id ? 'Modifier un animal' : 'Ajouter un animal' }} — Pawly{% endblock %}
+
+{% block body %}
+    <a class="back-link" href="{{ path('home') }}#animals">← Retour aux animaux</a>
+    <section class="form-card" aria-labelledby="form-title">
+        <h1 id="form-title">{{ dog.id ? 'Modifier ' ~ dog.nom : 'Ajouter un animal' }}</h1>
+        {% if dog.coverImage %}
+            <div class="current-photo">
+                <img class="animal-photo" src="{{ asset('uploads/' ~ dog.coverImage|url_encode) }}" alt="Photo actuelle de {{ dog.nom }}" width="640" height="480">
+                <p class="form-help">Sans nouvelle photographie, la photo actuelle sera conservée.</p>
+            </div>
+        {% endif %}
+        {% include 'dogs/_form.html.twig' with {form: form, button_label: dog.id ? 'Enregistrer les modifications' : 'Ajouter l’animal'} only %}
+    </section>
+{% endblock %}
