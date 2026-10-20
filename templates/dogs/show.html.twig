@@ -24,6 +24,9 @@
                 </dl>
                 <h2>Son histoire</h2>
                 <p class="animal-description">{{ dog.description|nl2br }}</p>
+                {% if dog.status == 'Disponible' %}
+                    <a class="button" href="{{ path('dog_adopt', {id: dog.id}) }}">Faire une demande d’adoption</a>
+                {% endif %}
                 {% if is_granted('ROLE_EMPLOYEE') %}
                     <a class="button" href="{{ path('app_dog_modify', {id: dog.id}) }}">Modifier la fiche</a>
                 {% endif %}

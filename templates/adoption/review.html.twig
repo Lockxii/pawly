@@ -1,0 +1,25 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Demande pour {{ adoption.dog.nom }} — Pawly{% endblock %}
+
+{% block body %}
+    <a class="back-link" href="{{ path('adoption_list') }}">← Retour aux demandes</a>
+    <section class="form-card">
+        <h1>Demande pour {{ adoption.dog.nom }}</h1>
+        <a href="{{ path('dog_show', {id: adoption.dog.id}) }}">Voir la fiche de l’animal</a>
+        <p><strong>Demandeur :</strong> {{ adoption.name }}</p>
+        <p><strong>E-mail :</strong> {{ adoption.email }}</p>
+        <p><strong>Statut :</strong> {{ adoption.status.value }}</p>
+        <h2>Projet d’adoption</h2>
+        <p>{{ adoption.message|nl2br }}</p>
+        {% if form %}
+            {{ form_start(form, {attr: {class: 'animal-form'}}) }}
+                {{ form_errors(form) }}
+                {{ form_widget(form) }}
+                <button type="submit" class="button">Valider la décision</button>
+            {{ form_end(form) }}
+        {% else %}
+            <p>Cette demande a déjà été traitée.</p>
+        {% endif %}
+    </section>
+{% endblock %}
