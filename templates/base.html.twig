@@ -30,6 +30,9 @@
                         <a href="{{ path('all') }}">Gestion des animaux</a>
                         <a href="{{ path('adoption_list') }}">Demandes d’adoption</a>
                     {% endif %}
+                    {% if is_granted('ROLE_ADMIN') %}
+                        <a href="{{ path('admin_users') }}">Utilisateurs</a>
+                    {% endif %}
                     {% if app.user %}
                         <form method="post" action="{{ path('logout') }}">
                             <input type="hidden" name="_csrf_token" value="{{ csrf_token('logout') }}">
