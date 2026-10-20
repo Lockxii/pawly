@@ -1,0 +1,14 @@
+<article class="animal-card">
+    {% if dog.coverImage %}
+        <img class="animal-photo" src="{{ asset('uploads/' ~ dog.coverImage|url_encode) }}" alt="Photo de {{ dog.nom }}" loading="lazy" width="640" height="480">
+    {% else %}
+        <div class="photo-placeholder">Photo à venir</div>
+    {% endif %}
+    <div class="card-content">
+        {% include 'dogs/_status.html.twig' with {status: dog.status} only %}
+        <h3>{{ dog.nom }}</h3>
+        <p class="animal-meta">{{ dog.espece }} · {{ dog.race }} · {{ dog.age }} {{ dog.age > 1 ? 'ans' : 'an' }}</p>
+        <p>{{ dog.description|length > 150 ? dog.description|slice(0, 150) ~ '…' : dog.description }}</p>
+        <a class="button button-outline" href="{{ path('dog_show', {id: dog.id}) }}" aria-label="Voir la fiche de {{ dog.nom }}">Voir sa fiche</a>
+    </div>
+</article>

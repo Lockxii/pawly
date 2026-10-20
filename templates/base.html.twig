@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="fr">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <title>{% block title %}Pawly — Refuge animalier{% endblock %}</title>
+        <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 128 128%22><text y=%221.2em%22 font-size=%2296%22>⚫️</text><text y=%221.3em%22 x=%220.2em%22 font-size=%2276%22 fill=%22%23fff%22>sf</text></svg>">
+        {% block stylesheets %}
+        {% endblock %}
+
+        {% block javascripts %}
+            {% block importmap %}{{ importmap('app') }}{% endblock %}
+        {% endblock %}
+
+        {% set frankenphp_hot_reload = app.request.server.get('FRANKENPHP_HOT_RELOAD') %}
+        {% if frankenphp_hot_reload %}
+        <meta name="frankenphp-hot-reload:url" content="{{ frankenphp_hot_reload }}">
+        <script src="https://cdn.jsdelivr.net/npm/idiomorph"></script>
+        <script src="https://cdn.jsdelivr.net/npm/frankenphp-hot-reload/+esm" type="module"></script>
+        {% endif %}
+    </head>
+    <body>
+        <a class="skip-link" href="#main">Aller au contenu</a>
+        <header class="site-header">
+            <div class="container header-content">
+                <a class="brand" href="{{ path('home') }}">Pawly<span>Refuge animalier</span></a>
+                <nav aria-label="Navigation principale">
+                    <a href="{{ path('home') }}#animals">Nos animaux</a>
+                    {% if is_granted('ROLE_EMPLOYEE') %}
+                        <a href="{{ path('all') }}">Gestion des animaux</a>
+                        <a href="{{ path('adoption_list') }}">Demandes d’adoption</a>
+                    {% endif %}
+                    {% if is_granted('ROLE_ADMIN') %}
+                        <a href="{{ path('admin_users') }}">Utilisateurs</a>
+                    {% endif %}
+                    {% if app.user %}
+                        <form method="post" action="{{ path('logout') }}">
+                            <input type="hidden" name="_csrf_token" value="{{ csrf_token('logout') }}">
+                            <button type="submit" class="nav-button">Déconnexion</button>
+                        </form>
+                    {% else %}
+                        <a href="{{ path('app_login') }}">Connexion</a>
+                        <a href="{{ path('app_register') }}">Inscription</a>
+                    {% endif %}
+                </nav>
+            </div>
+        </header>
+        <main id="main" class="container" tabindex="-1">
+            {% for message in app.flashes('success') %}
+                <p class="status status-available" role="status">{{ message }}</p>
+            {% endfor %}
+            {% block body %}{% endblock %}
+        </main>
+        <footer class="site-footer"><div class="container">Pawly · Un nouveau départ pour chaque animal.</div></footer>
+    </body>
+</html>

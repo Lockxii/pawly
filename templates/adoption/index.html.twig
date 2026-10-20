@@ -1,0 +1,23 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Demandes d’adoption — Pawly{% endblock %}
+
+{% block body %}
+    <h1>Demandes d’adoption</h1>
+    <div class="table-wrap">
+        <table>
+            <thead><tr><th>Animal</th><th>Demandeur</th><th>Date</th><th>Statut</th><th>Fiche</th></tr></thead>
+            <tbody>
+                {% for adoption in adoptions %}
+                    <tr>
+                        <td>{{ adoption.dog.nom }}</td><td>{{ adoption.name }}</td>
+                        <td>{{ adoption.createdAt|date('d/m/Y') }}</td><td>{{ adoption.status.value }}</td>
+                        <td><a href="{{ path('adoption_review', {id: adoption.id}) }}">Consulter la demande de {{ adoption.name }}</a></td>
+                    </tr>
+                {% else %}
+                    <tr><td colspan="5">Aucune demande pour le moment.</td></tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+{% endblock %}

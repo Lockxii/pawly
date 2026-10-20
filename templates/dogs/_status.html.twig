@@ -1,0 +1,7 @@
+{% set labels = {
+    'Disponible': 'Disponible à l’adoption',
+    'En Attente': 'En cours d’adoption',
+    'Adopte': 'Adopté'
+} %}
+{% set colors = {'Disponible': 'available', 'En Attente': 'pending', 'Adopte': 'adopted'} %}
+<span class="status status-{{ colors[status]|default('unknown') }}">{{ labels[status]|default('Statut non renseigné') }}</span>

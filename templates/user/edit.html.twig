@@ -1,0 +1,15 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Modifier {{ user.username }} — Pawly{% endblock %}
+
+{% block body %}
+    <a class="back-link" href="{{ path('admin_users') }}">← Retour aux utilisateurs</a>
+    <section class="form-card">
+        <h1>Modifier {{ user.username }}</h1>
+        {{ form_start(form, {attr: {class: 'animal-form'}}) }}
+            {{ form_errors(form) }}
+            {{ form_widget(form) }}
+            <button type="submit" class="button">Enregistrer l’utilisateur</button>
+        {{ form_end(form) }}
+    </section>
+{% endblock %}

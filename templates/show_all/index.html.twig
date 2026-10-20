@@ -1,0 +1,18 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Gestion des animaux — Pawly{% endblock %}
+
+{% block body %}
+    <div class="section-heading">
+        <h1>Gestion des animaux</h1>
+        <a class="button" href="{{ path('app_dog_creator') }}">Ajouter un animal</a>
+    </div>
+    <p>Tous les animaux du refuge, y compris ceux en cours d’adoption ou adoptés.</p>
+    <div class="animal-grid">
+        {% for dog in dogs %}
+            {% include 'dogs/_card.html.twig' with {dog: dog} only %}
+        {% else %}
+            <p class="empty-state">Aucun animal enregistré pour le moment.</p>
+        {% endfor %}
+    </div>
+{% endblock %}
