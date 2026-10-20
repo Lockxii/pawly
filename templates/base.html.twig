@@ -1,8 +1,9 @@
 <!DOCTYPE html>
-<html>
+<html lang="fr">
     <head>
         <meta charset="UTF-8">
-        <title>{% block title %}Welcome!{% endblock %}</title>
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <title>{% block title %}Pawly — Refuge animalier{% endblock %}</title>
         <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 128 128%22><text y=%221.2em%22 font-size=%2296%22>⚫️</text><text y=%221.3em%22 x=%220.2em%22 font-size=%2276%22 fill=%22%23fff%22>sf</text></svg>">
         {% block stylesheets %}
         {% endblock %}
@@ -19,6 +20,24 @@
         {% endif %}
     </head>
     <body>
-        {% block body %}{% endblock %}
+        <a class="skip-link" href="#main">Aller au contenu</a>
+        <header class="site-header">
+            <div class="container header-content">
+                <a class="brand" href="{{ path('home') }}">Pawly<span>Refuge animalier</span></a>
+                <nav aria-label="Navigation principale">
+                    <a href="{{ path('home') }}#animals">Nos animaux</a>
+                    {% if is_granted('ROLE_EMPLOYEE') %}
+                        <a href="{{ path('all') }}">Gestion des animaux</a>
+                    {% endif %}
+                </nav>
+            </div>
+        </header>
+        <main id="main" class="container" tabindex="-1">
+            {% for message in app.flashes('success') %}
+                <p class="status status-available" role="status">{{ message }}</p>
+            {% endfor %}
+            {% block body %}{% endblock %}
+        </main>
+        <footer class="site-footer"><div class="container">Pawly · Un nouveau départ pour chaque animal.</div></footer>
     </body>
 </html>

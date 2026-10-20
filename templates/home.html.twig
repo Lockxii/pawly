@@ -1,8 +1,31 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Pawly{% endblock %}
+{% block title %}Nos animaux à adopter — Pawly{% endblock %}
 
 {% block body %}
-    <h1>Pawly</h1>
-    <p>Application de gestion d'un refuge animalier.</p>
+    <section class="hero" aria-labelledby="welcome-title">
+        <p class="eyebrow">Bienvenue au refuge</p>
+        <h1 id="welcome-title">Un compagnon, une nouvelle histoire.</h1>
+        <p>Découvrez les animaux qui attendent une famille et apprenez à les connaître.</p>
+        <a class="button" href="#animals">Rencontrer nos animaux</a>
+        {% if is_granted('ROLE_EMPLOYEE') %}
+            <a class="button button-outline" href="{{ path('app_dog_creator') }}">Ajouter un animal</a>
+        {% endif %}
+    </section>
+
+    <section id="animals" aria-labelledby="animals-title">
+        <div class="section-heading">
+            <h2 id="animals-title">Nos animaux disponibles</h2>
+            {% if dogs|default([]) is not empty %}
+                <p>{{ dogs|length }} {{ dogs|length > 1 ? 'animaux à rencontrer' : 'animal à rencontrer' }}</p>
+            {% endif %}
+        </div>
+        <div class="animal-grid">
+            {% for dog in dogs|default([]) %}
+                {% include 'dogs/_card.html.twig' with {dog: dog} only %}
+            {% else %}
+                <p class="empty-state">Aucun animal disponible à l'adoption pour le moment. Revenez bientôt !</p>
+            {% endfor %}
+        </div>
+    </section>
 {% endblock %}
