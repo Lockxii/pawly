@@ -29,6 +29,15 @@
                     {% if is_granted('ROLE_EMPLOYEE') %}
                         <a href="{{ path('all') }}">Gestion des animaux</a>
                     {% endif %}
+                    {% if app.user %}
+                        <form method="post" action="{{ path('logout') }}">
+                            <input type="hidden" name="_csrf_token" value="{{ csrf_token('logout') }}">
+                            <button type="submit" class="nav-button">Déconnexion</button>
+                        </form>
+                    {% else %}
+                        <a href="{{ path('app_login') }}">Connexion</a>
+                        <a href="{{ path('app_register') }}">Inscription</a>
+                    {% endif %}
                 </nav>
             </div>
         </header>
