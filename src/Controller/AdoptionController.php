@@ -3,6 +3,7 @@
 namespace App\Controller;
 
 use App\Entity\Adoption;
+use App\Entity\User;
 use App\Form\AdoptionFormType;
 use App\Repository\DogsRepository;
 use App\Service\AdoptionService;
@@ -23,6 +24,12 @@ class AdoptionController extends AbstractController
         }
         $adoption = new Adoption();
         $adoption->setDog($dog);
+        $user = $this->getUser();
+        if ($user instanceof User) {
+            $adoption->setUser($user);
+            $adoption->setName($user->getUsername());
+            $adoption->setEmail($user->getEmail());
+        }
         $form = $this->createForm(AdoptionFormType::class, $adoption);
         $form->handleRequest($request);
 

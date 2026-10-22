@@ -8,6 +8,9 @@
         <h1>Demande d’adoption pour {{ dog.nom }}</h1>
         {% if dog.status == 'Disponible' %}
             <p>Présentez-vous au refuge. L’équipe étudiera votre demande et pourra vous contacter par e-mail.</p>
+            {% if not app.user %}
+                <p><a href="{{ path('app_login') }}">Connectez-vous</a> avant l’envoi pour retrouver ensuite la demande dans « Mes demandes ».</p>
+            {% endif %}
             {{ form_start(form, {attr: {class: 'animal-form'}}) }}
                 {{ form_errors(form) }}
                 {{ form_widget(form) }}

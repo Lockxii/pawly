@@ -17,6 +17,10 @@ class Adoption
     #[ORM\JoinColumn(nullable: false)]
     private ?Dogs $dog = null;
 
+    #[ORM\ManyToOne]
+    #[ORM\JoinColumn(nullable: true, onDelete: 'SET NULL')]
+    private ?User $user = null;
+
     #[ORM\Column(length: 100)]
     #[Assert\NotBlank, Assert\Length(max: 100)]
     private string $name = '';
@@ -58,6 +62,16 @@ class Adoption
     public function getName(): string
     {
         return $this->name;
+    }
+
+    public function getUser(): ?User
+    {
+        return $this->user;
+    }
+
+    public function setUser(?User $user): void
+    {
+        $this->user = $user;
     }
 
     public function setName(string $name): void

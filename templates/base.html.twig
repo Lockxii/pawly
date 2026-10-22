@@ -34,6 +34,7 @@
                         <a href="{{ path('admin_users') }}">Utilisateurs</a>
                     {% endif %}
                     {% if app.user %}
+                        <a href="{{ path('my_adoptions') }}">Mes demandes</a>
                         <form method="post" action="{{ path('logout') }}">
                             <input type="hidden" name="_csrf_token" value="{{ csrf_token('logout') }}">
                             <button type="submit" class="nav-button">Déconnexion</button>
