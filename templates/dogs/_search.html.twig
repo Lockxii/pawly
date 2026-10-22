@@ -1,0 +1,8 @@
+{{ form_start(searchForm, {attr: {class: 'animal-form search-form'}}) }}
+    {{ form_errors(searchForm) }}
+    {{ form_widget(searchForm) }}
+    <div class="form-actions">
+        <button type="submit" class="button">Rechercher</button>
+        <a href="{{ path(reset_route) }}">Réinitialiser</a>
+    </div>
+{{ form_end(searchForm) }}

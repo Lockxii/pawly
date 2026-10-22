@@ -224,6 +224,39 @@ class ApplicationFlowTest extends WebTestCase
         $this->client->submitForm('Se connecter', ['_username' => $email, '_password' => 'password123']);
     }
 
+    public function testPublicSearchOnlyReturnsAvailableAnimals(): void
+    {
+        $this->client->request('GET', '/');
+        $this->client->submitForm('Rechercher', ['dog_search[q]' => 'Labrador'], 'GET');
+        self::assertResponseIsSuccessful();
+        self::assertSelectorCount(1, '.animal-card');
+        self::assertSelectorTextContains('.animal-card', 'Luna');
+        $this->client->submitForm('Rechercher', ['dog_search[q]' => 'Nala'], 'GET');
+        self::assertSelectorCount(0, '.animal-card');
+
+        $this->client->request('GET', '/', ['dog_search' => ['q' => '', 'status' => 'Adopte']]);
+        self::assertResponseIsSuccessful();
+        self::assertSelectorCount(0, '.animal-card');
+        self::assertSelectorExists('.search-form ul li');
+    }
+
+    public function testMemberCanCombineSearchAndStatusFilter(): void
+    {
+        $this->login('membre@example.com');
+        $this->client->request('GET', '/animals');
+        $this->client->submitForm('Rechercher', ['dog_search[q]' => 'Bella', 'dog_search[status]' => 'Adopte'], 'GET');
+        self::assertResponseIsSuccessful();
+        self::assertSelectorCount(1, '.animal-card');
+        self::assertSelectorTextContains('.animal-card', 'Bella');
+        $this->client->submitForm('Rechercher', ['dog_search[q]' => 'Bella', 'dog_search[status]' => 'Disponible'], 'GET');
+        self::assertSelectorCount(0, '.animal-card');
+
+        $this->client->request('GET', '/animals', ['dog_search' => ['q' => '', 'status' => 'inconnu']]);
+        self::assertResponseIsSuccessful();
+        self::assertSelectorCount(0, '.animal-card');
+        self::assertSelectorExists('.search-form ul li');
+    }
+
     public function testLoginWorksWithPreviousStatelessCsrfSession(): void
     {
         $crawler = $this->client->request('GET', '/login');

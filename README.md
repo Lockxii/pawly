@@ -84,6 +84,8 @@ Ouvrir l’adresse affichée par Symfony CLI.
 
 Les photographies sont facultatives, enregistrées dans `public/uploads` et limitées à 5 Mo (JPEG, PNG, WebP ou GIF).
 
+La recherche porte sur le nom, la race et l’espèce. L’accueil affiche uniquement les animaux disponibles ; les membres peuvent aussi filtrer tous les animaux par statut depuis `/animals`.
+
 Une demande est en attente, acceptée ou refusée. L’acceptation place l’animal en cours d’adoption ; un membre peut ensuite le marquer adopté depuis sa fiche. Une demande traitée ne peut plus être modifiée.
 
 ## Tests

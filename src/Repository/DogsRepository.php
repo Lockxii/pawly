@@ -25,6 +25,22 @@ class DogsRepository extends ServiceEntityRepository
         ]);
     }
 
+    /** @return Dogs[] */
+    public function search(string $query = '', ?string $status = null): array
+    {
+        $builder = $this->createQueryBuilder('d')->orderBy('d.Nom', 'ASC');
+        if (trim($query) !== '') {
+            $builder
+                ->andWhere('d.Nom LIKE :query OR d.race LIKE :query OR d.espece LIKE :query')
+                ->setParameter('query', '%'.trim($query).'%');
+        }
+        if ($status !== null && $status !== '') {
+            $builder->andWhere('d.status = :status')->setParameter('status', $status);
+        }
+
+        return $builder->getQuery()->getResult();
+    }
+
 //    /**
 //     * @return Dogs[] Returns an array of Dogs objects
 //     */
