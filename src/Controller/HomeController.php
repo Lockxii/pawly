@@ -3,20 +3,30 @@
 namespace App\Controller;
 
 use App\Repository\DogsRepository;
+use App\Form\DogSearchType;
+use App\Enum\DogsStatus;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Attribute\AsController;
 use Symfony\Component\Routing\Attribute\Route;
-use Twig\Environment;
 
 #[AsController]
 #[Route(path: '/', name: 'home', methods:['GET'])]
-class HomeController
+class HomeController extends AbstractController
 {
-    public function __invoke(Environment $twig, DogsRepository $dogsRepository) : Response {
+    public function __invoke(Request $request, DogsRepository $dogsRepository): Response
+    {
+        $form = $this->createForm(DogSearchType::class, null, ['method' => 'GET', 'csrf_protection' => false]);
+        $form->remove('status');
+        $form->handleRequest($request);
+        $data = $form->getData() ?? [];
+        $dogs = $form->isSubmitted() && !$form->isValid()
+            ? [] : $dogsRepository->search($data['q'] ?? '', DogsStatus::Disponible->value);
 
-        return new Response($twig->render('home.html.twig',[
-            'dogs' => $dogsRepository->findDogDisponible(),
-
-        ]), Response::HTTP_OK);
+        return $this->render('home.html.twig', [
+            'dogs' => $dogs,
+            'searchForm' => $form->createView(),
+        ]);
     }
 }

@@ -20,11 +20,12 @@
                 <p>{{ dogs|length }} {{ dogs|length > 1 ? 'animaux à rencontrer' : 'animal à rencontrer' }}</p>
             {% endif %}
         </div>
+        {% include 'dogs/_search.html.twig' with {searchForm: searchForm, reset_route: 'home'} only %}
         <div class="animal-grid">
             {% for dog in dogs|default([]) %}
                 {% include 'dogs/_card.html.twig' with {dog: dog} only %}
             {% else %}
-                <p class="empty-state">Aucun animal disponible à l'adoption pour le moment. Revenez bientôt !</p>
+                <p class="empty-state">{{ searchForm.vars.submitted ? 'Aucun animal ne correspond à votre recherche.' : 'Aucun animal disponible à l’adoption pour le moment. Revenez bientôt !' }}</p>
             {% endfor %}
         </div>
     </section>

@@ -8,11 +8,12 @@
         <a class="button" href="{{ path('app_dog_creator') }}">Ajouter un animal</a>
     </div>
     <p>Tous les animaux du refuge, y compris ceux en cours d’adoption ou adoptés.</p>
+    {% include 'dogs/_search.html.twig' with {searchForm: searchForm, reset_route: 'all'} only %}
     <div class="animal-grid">
         {% for dog in dogs %}
             {% include 'dogs/_card.html.twig' with {dog: dog} only %}
         {% else %}
-            <p class="empty-state">Aucun animal enregistré pour le moment.</p>
+            <p class="empty-state">{{ searchForm.vars.submitted ? 'Aucun animal ne correspond à votre recherche.' : 'Aucun animal enregistré pour le moment.' }}</p>
         {% endfor %}
     </div>
 {% endblock %}

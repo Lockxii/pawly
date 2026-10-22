@@ -224,6 +224,79 @@ class ApplicationFlowTest extends WebTestCase
         $this->client->submitForm('Se connecter', ['_username' => $email, '_password' => 'password123']);
     }
 
+    public function testPersonalAdoptionsRequireLoginAndStayPrivate(): void
+    {
+        $this->client->request('GET', '/mes-demandes');
+        self::assertResponseRedirects('/login');
+        $this->login('user@example.com');
+        $this->client->request('GET', '/mes-demandes');
+        self::assertResponseIsSuccessful();
+        self::assertSelectorCount(1, 'tbody tr');
+        self::assertSelectorTextContains('tbody', 'Rex');
+        self::assertStringNotContainsString('Nala', $this->client->getResponse()->getContent());
+
+        $crawler = $this->client->request('GET', '/dogs/1/adopt');
+        self::assertSame('user@example.com', $crawler->filter('input[name="adoption_form[email]"]')->attr('value'));
+        $this->client->submitForm('Envoyer ma demande', ['adoption_form[message]' => 'Mon projet personnel pour Rex.']);
+        self::assertResponseRedirects('/dogs/1');
+        self::assertSame(3, $this->manager->getConnection()->fetchOne('SELECT user_id FROM Adoption WHERE id = 4'));
+        $this->client->request('GET', '/mes-demandes');
+        self::assertSelectorTextContains('tbody', 'Mon projet personnel pour Rex.');
+
+        $this->login('admin@example.com');
+        $this->client->request('GET', '/mes-demandes', ['user' => 3, 'email' => 'user@example.com']);
+        self::assertResponseIsSuccessful();
+        self::assertStringNotContainsString('Mon projet personnel pour Rex.', $this->client->getResponse()->getContent());
+        self::assertSelectorTextContains('tbody', 'pas encore envoyé');
+    }
+
+    public function testAnonymousRequestsAreNotClaimedByMatchingEmail(): void
+    {
+        $this->client->request('GET', '/dogs/1/adopt');
+        $this->client->submitForm('Envoyer ma demande', [
+            'adoption_form[name]' => 'Visiteur', 'adoption_form[email]' => 'user@example.com',
+            'adoption_form[message]' => 'Demande anonyme à ne pas rattacher automatiquement.',
+        ]);
+        self::assertResponseRedirects('/dogs/1');
+        self::assertNull($this->manager->getConnection()->fetchOne('SELECT user_id FROM Adoption WHERE id = 4'));
+        $this->login('user@example.com');
+        $this->client->request('GET', '/mes-demandes');
+        self::assertStringNotContainsString('Demande anonyme', $this->client->getResponse()->getContent());
+    }
+
+    public function testPublicSearchOnlyReturnsAvailableAnimals(): void
+    {
+        $this->client->request('GET', '/');
+        $this->client->submitForm('Rechercher', ['dog_search[q]' => 'Labrador'], 'GET');
+        self::assertResponseIsSuccessful();
+        self::assertSelectorCount(1, '.animal-card');
+        self::assertSelectorTextContains('.animal-card', 'Luna');
+        $this->client->submitForm('Rechercher', ['dog_search[q]' => 'Nala'], 'GET');
+        self::assertSelectorCount(0, '.animal-card');
+
+        $this->client->request('GET', '/', ['dog_search' => ['q' => '', 'status' => 'Adopte']]);
+        self::assertResponseIsSuccessful();
+        self::assertSelectorCount(0, '.animal-card');
+        self::assertSelectorExists('.search-form ul li');
+    }
+
+    public function testMemberCanCombineSearchAndStatusFilter(): void
+    {
+        $this->login('membre@example.com');
+        $this->client->request('GET', '/animals');
+        $this->client->submitForm('Rechercher', ['dog_search[q]' => 'Bella', 'dog_search[status]' => 'Adopte'], 'GET');
+        self::assertResponseIsSuccessful();
+        self::assertSelectorCount(1, '.animal-card');
+        self::assertSelectorTextContains('.animal-card', 'Bella');
+        $this->client->submitForm('Rechercher', ['dog_search[q]' => 'Bella', 'dog_search[status]' => 'Disponible'], 'GET');
+        self::assertSelectorCount(0, '.animal-card');
+
+        $this->client->request('GET', '/animals', ['dog_search' => ['q' => '', 'status' => 'inconnu']]);
+        self::assertResponseIsSuccessful();
+        self::assertSelectorCount(0, '.animal-card');
+        self::assertSelectorExists('.search-form ul li');
+    }
+
     public function testLoginWorksWithPreviousStatelessCsrfSession(): void
     {
         $crawler = $this->client->request('GET', '/login');
