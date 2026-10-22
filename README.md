@@ -79,12 +79,15 @@ Ouvrir l’adresse affichée par Symfony CLI.
 - `/login`, `/register` : connexion et inscription. La déconnexion se fait depuis le menu.
 - `/dogs/{id}/adopt` : demande d’adoption accessible aux visiteurs, sans compte obligatoire.
 - `/adoptions` : suivi des demandes et décisions, réservé aux membres et administrateurs.
+- `/mes-demandes` : suivi de ses demandes, après connexion.
 - `/admin/users` : modification des utilisateurs et de leurs rôles, réservée aux administrateurs.
 - `/health-check` : contrôle de fonctionnement.
 
 Les photographies sont facultatives, enregistrées dans `public/uploads` et limitées à 5 Mo (JPEG, PNG, WebP ou GIF).
 
 La recherche porte sur le nom, la race et l’espèce. L’accueil affiche uniquement les animaux disponibles ; les membres peuvent aussi filtrer tous les animaux par statut depuis `/animals`.
+
+Une demande envoyée en étant connecté apparaît dans « Mes demandes » avec son statut. Les demandes anonymes restent accessibles uniquement aux membres chargés de leur traitement ; saisir une adresse e-mail ne permet pas de récupérer les demandes d’un compte.
 
 Une demande est en attente, acceptée ou refusée. L’acceptation place l’animal en cours d’adoption ; un membre peut ensuite le marquer adopté depuis sa fiche. Une demande traitée ne peut plus être modifiée.
 
